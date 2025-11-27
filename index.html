@@ -3,56 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>8 Months ♡ - Our Love Story</title>
+    <title>8 Months ♡ - Vintage Love Letter</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Floating particles background -->
-    <div id="particles-js"></div>
+    <!-- Background with subtle texture -->
+    <div class="background-texture"></div>
     
-    <!-- Opening scene - Envelope -->
-    <div class="scene" id="envelope-scene">
-        <div class="envelope" id="envelope">
-            <div class="envelope-front">
-                <div class="envelope-flap" id="flap"></div>
-                <div class="heart-icon">♡</div>
-                <h2>For My Jaana</h2>
-                <p>8 Months ♡</p>
+    <!-- Audio element for background music -->
+    <audio id="love-song" loop>
+        <source src="your-love-song.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <!-- Stage 1: The sealed envelope -->
+    <div class="scene active" id="stage1">
+        <div class="envelope-container">
+            <div class="envelope" id="envelope">
+                <div class="envelope-front">
+                    <div class="seal-stamp">♡</div>
+                    <div class="envelope-texture"></div>
+                    <div class="envelope-content">
+                        <h2 class="envelope-title">To My Jaana</h2>
+                        <p class="envelope-date">8 Months ♡</p>
+                    </div>
+                </div>
+                <div class="envelope-back">
+                    <div class="envelope-texture"></div>
+                </div>
             </div>
-            <div class="envelope-back"></div>
+            <div class="instructions">Click to open the letter</div>
         </div>
     </div>
 
-    <!-- Main content - opens after envelope animation -->
-    <div class="scene hidden" id="content-scene">
-        <div class="letter-container">
-            <div class="letter" id="letter">
-                <div class="letter-page">
-                    <h1 class="animated-title">8 Months ♡</h1>
-                    
-                    <div class="letter-content">
-                        <p>It has been eight months.. eight whole months of learning what life actually feels like when someone comes in and flips everything you thought you understood about love. I used to think love was simple, just affection, just warm moments here and there, but with you.. Ah Jaana, it became something entirely different. I learned that real love is made of the things people do not talk about enough. It is the pain of distance that we still choose to carry, the quiet nights where we miss each other more than we admit, the way we keep showing up even when it gets heavy.</p>
-                        
-                        <p>And somewhere along this journey.. I realized love is care. Not the surface-level kind. The deep kind.. the kind that looks at someone and decides "you come first for me" without hesitation.. without any second thoughts. And you, Jaana.. you care for me in a way I didn't even know I needed. You care before anything else, before anyone else, even before yourself sometimes.. and it makes my heart feel things that I didn't know it could feel.</p>
-                        
-                        <p>You ask why I care so much, why I love in the way I do.. but how do I explain this to you, Jaana.. to the person who somehow became the center of everything for me. You try to be strong, you try to be all tough on the outside.. but I see that little child inside you, the part of you that just wants to be held, to be loved, to be protected without conditions.. and Jaana, I love that side of you more than I can ever say.</p>
-                        
-                        <p>I love when you rely on me, when you get possessive.. when you are a upset .. and you have no idea how much I love making it right. Because the moment you laugh after that.. the moment you smile.... Jaana, that is the moment everything inside me feels complete. It's like the universe hands me everything I ever wanted and it's all wrapped in your smile.</p>
-                        
-                        <p>For me, love is in every small thing we don't even notice half the time.. when we say the same words at the same time, when you call my name like it's yours, when you choose me even in the smallest ways. These tiny things.. they build a world inside me where only you exist. Love for me isn't just a feeling anymore.. love for me is literally you, Jaana.</p>
-                        
-                        <p>And I know we still have a long journey ahead of us. I know there are days when we ache for each other, nights when distance feels unfair.. but somewhere deep down I know.. one day we'll look back at everything.. everything we held on through, everything we survived together.. and we'll say "Jaana.. we actually made it.. we really did."</p>
-                        
-                        <p class="happy-ending">Happy eight months to us, Jaana.. I love you in ways I'll probably spend my whole life trying to put into words.. and yk just when I wrote your name for the third time here.. i was smiling like an idiot.. man im cooked. Again i love you meri gudiya ♡</p>
+    <!-- Stage 2: Opened envelope with folded paper -->
+    <div class="scene" id="stage2">
+        <div class="paper-stage">
+            <div class="envelope-open" id="envelope-open">
+                <div class="envelope-front-open">
+                    <div class="flap-top" id="flap-top">
+                        <div class="flap-content">
+                            <p>Dear Jaana,</p>
+                            <p>It has been eight months...</p>
+                        </div>
                     </div>
+                    <div class="flap-left" id="flap-left"></div>
+                    <div class="flap-right" id="flap-right"></div>
+                    <div class="paper-preview">
+                        <div class="paper-texture"></div>
+                        <p class="preview-text">Click to unfold the letter</p>
+                    </div>
+                </div>
+            </div>
+            <div class="instructions">Click on the paper to unfold</div>
+        </div>
+    </div>
 
-                    <div class="hearts-container">
-                        <div class="floating-heart">♡</div>
-                        <div class="floating-heart">💕</div>
-                        <div class="floating-heart">💖</div>
-                        <div class="floating-heart">💗</div>
-                        <div class="floating-heart">💝</div>
+    <!-- Stage 3: Fully unfolded letter with handwritten content -->
+    <div class="scene" id="stage3">
+        <div class="letter-container">
+            <div class="unfolded-paper" id="unfolded-paper">
+                <div class="paper-texture full-texture"></div>
+                <div class="letter-content">
+                    <div class="handwritten-text">
+                        <h1 class="letter-title">8 Months ♡</h1>
+                        
+                        <p class="handwritten-paragraph">It has been eight months.. eight whole months of learning what life actually feels like when someone comes in and flips everything you thought you understood about love. I used to think love was simple, just affection, just warm moments here and there, but with you.. Ah Jaana, it became something entirely different. I learned that real love is made of the things people do not talk about enough. It is the pain of distance that we still choose to carry, the quiet nights where we miss each other more than we admit, the way we keep showing up even when it gets heavy.</p>
+                        
+                        <p class="handwritten-paragraph">And somewhere along this journey.. I realized love is care. Not the surface-level kind. The deep kind.. the kind that looks at someone and decides "you come first for me" without hesitation.. without any second thoughts. And you, Jaana.. you care for me in a way I didn't even know I needed. You care before anything else, before anyone else, even before yourself sometimes.. and it makes my heart feel things that I didn't know it could feel.</p>
+                        
+                        <p class="handwritten-paragraph">You ask why I care so much, why I love in the way I do.. but how do I explain this to you, Jaana.. to the person who somehow became the center of everything for me. You try to be strong, you try to be all tough on the outside.. but I see that little child inside you, the part of you that just wants to be held, to be loved, to be protected without conditions.. and Jaana, I love that side of you more than I can ever say.</p>
+                        
+                        <p class="handwritten-paragraph">I love when you rely on me, when you get possessive.. when you are a upset .. and you have no idea how much I love making it right. Because the moment you laugh after that.. the moment you smile.... Jaana, that is the moment everything inside me feels complete. It's like the universe hands me everything I ever wanted and it's all wrapped in your smile.</p>
+                        
+                        <p class="handwritten-paragraph">For me, love is in every small thing we don't even notice half the time.. when we say the same words at the same time, when you call my name like it's yours, when you choose me even in the smallest ways. These tiny things.. they build a world inside me where only you exist. Love for me isn't just a feeling anymore.. love for me is literally you, Jaana.</p>
+                        
+                        <p class="handwritten-paragraph">And I know we still have a long journey ahead of us. I know there are days when we ache for each other, nights when distance feels unfair.. but somewhere deep down I know.. one day we'll look back at everything.. everything we held on through, everything we survived together.. and we'll say "Jaana.. we actually made it.. we really did."</p>
+                        
+                        <p class="handwritten-paragraph happy-ending">Happy eight months to us, Jaana.. I love you in ways I'll probably spend my whole life trying to put into words.. and yk just when I wrote your name for the third time here.. i was smiling like an idiot.. man im cooked. Again i love you meri gudiya ♡</p>
                     </div>
                 </div>
             </div>
