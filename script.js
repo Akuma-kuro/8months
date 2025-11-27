@@ -1,92 +1,128 @@
-// Create floating particles background
-function createParticles() {
-    const particlesContainer = document.getElementById('particles-js');
-    const particleCount = 50;
-    
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.style.position = 'absolute';
-        particle.style.width = Math.random() * 4 + 2 + 'px';
-        particle.style.height = particle.style.width;
-        particle.style.backgroundColor = `rgba(255, ${Math.floor(Math.random() * 100) + 155}, ${Math.floor(Math.random() * 100) + 155}, 0.6)`;
-        particle.style.borderRadius = '50%';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.top = Math.random() * 100 + '%';
-        particle.style.animation = `floatParticle ${Math.random() * 10 + 10}s infinite linear`;
-        particle.style.zIndex = '2';
-        
-        // Add CSS for animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes floatParticle {
-                0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
-                10% { opacity: 1; }
-                90% { opacity: 1; }
-                100% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(360deg); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
-        
-        particlesContainer.appendChild(particle);
+class VintageLetter {
+    constructor() {
+        this.currentStage = 1;
+        this.audio = document.getElementById('love-song');
+        this.init();
     }
-}
 
-// Handle envelope click to open letter
-document.getElementById('envelope').addEventListener('click', function() {
-    const flap = document.getElementById('flap');
-    flap.style.transform = 'translateX(-50%) rotateX(180deg)';
-    flap.style.opacity = '0';
-    
-    setTimeout(() => {
-        document.getElementById('envelope-scene').classList.add('hidden');
-        document.getElementById('content-scene').classList.remove('hidden');
+    init() {
+        // Stage 1: Click to open envelope
+        const envelope = document.getElementById('envelope');
+        if (envelope) {
+            envelope.addEventListener('click', () => this.openEnvelope());
+        }
+
+        // Stage 2: Open flaps and unfold paper
+        const flapTop = document.getElementById('flap-top');
+        const flapLeft = document.getElementById('flap-left');
+        const flapRight = document.getElementById('flap-right');
+        const paperPreview = document.querySelector('.paper-preview');
+
+        if (flapTop) flapTop.addEventListener('click', () => this.flipFlap('top'));
+        if (flapLeft) flapLeft.addEventListener('click', () => this.flipFlap('left'));
+        if (flapRight) flapRight.addEventListener('click', () => this.flipFlap('right'));
+        if (paperPreview) paperPreview.addEventListener('click', () => this.goToStage3());
+
+        // Stage 3: Click to unfold paper
+        const unfoldedPaper = document.getElementById('unfolded-paper');
+        if (unfoldedPaper) unfoldedPaper.addEventListener('click', () => this.unfoldPaper());
+    }
+
+    openEnvelope() {
+        const envelope = document.getElementById('envelope');
+        envelope.style.transform = 'rotateY(180deg)';
         
-        // Add typing effect to letter content
-        typeWriterEffect();
-    }, 1000);
-});
-
-// Typewriter effect for letter content
-function typeWriterEffect() {
-    const paragraphs = document.querySelectorAll('.letter-content p');
-    paragraphs.forEach((p, index) => {
-        const text = p.textContent;
-        p.textContent = '';
-        let i = 0;
+        // Play audio
+        this.audio.play().catch(e => console.log('Audio play failed:', e));
         
         setTimeout(() => {
-            const timer = setInterval(() => {
-                if (i < text.length) {
-                    p.textContent += text.charAt(i);
-                    i++;
-                } else {
-                    clearInterval(timer);
-                }
-            }, 30);
-        }, index * 1000);
-    });
-}
+            document.getElementById('stage1').classList.remove('active');
+            document.getElementById('stage2').classList.add('active');
+            this.currentStage = 2;
+        }, 1500);
+    }
 
-// Add interactive heart animations
-function addInteractiveHearts() {
-    document.addEventListener('mousemove', (e) => {
-        if (Math.random() > 0.7) { // Only create hearts occasionally
+    flipFlap(flapType) {
+        const flap = document.getElementById(`flap-${flapType}`);
+        if (!flap.classList.contains('flipped')) {
+            flap.classList.add('flipped');
+            
+            // Check if all flaps are flipped
+            const allFlaps = [document.getElementById('flap-top'), 
+                             document.getElementById('flap-left'), 
+                             document.getElementById('flap-right')];
+            
+            const allFlipped = allFlaps.every(flap => flap.classList.contains('flipped'));
+            
+            if (allFlipped) {
+                setTimeout(() => {
+                    this.goToStage3();
+                }, 1000);
+            }
+        }
+    }
+
+    goToStage3() {
+        document.getElementById('stage2').classList.remove('active');
+        document.getElementById('stage3').classList.add('active');
+        this.currentStage = 3;
+    }
+
+    unfoldPaper() {
+        const paper = document.getElementById('unfolded-paper');
+        if (!paper.classList.contains('unfolded')) {
+            paper.classList.add('unfolded');
+            
+            // Add paper crinkle sound effect
+            this.playPaperSound();
+        }
+    }
+
+    playPaperSound() {
+        // Create a simple paper crinkle sound using Web Audio API
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(50, audioContext.currentTime + 0.5);
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        } catch (e) {
+            console.log('Web Audio API not supported');
+        }
+    }
+
+    // Add floating particles effect
+    createFloatingHearts() {
+        setInterval(() => {
             const heart = document.createElement('div');
             heart.innerHTML = '♡';
             heart.style.position = 'fixed';
-            heart.style.left = e.clientX + 'px';
-            heart.style.top = e.clientY + 'px';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '-50px';
             heart.style.fontSize = Math.random() * 20 + 15 + 'px';
             heart.style.color = '#e74c3c';
+            heart.style.opacity = '0.7';
             heart.style.pointerEvents = 'none';
             heart.style.zIndex = '100';
-            heart.style.animation = 'heartFloat 1.5s ease-out forwards';
+            heart.style.animation = `fall ${Math.random() * 3 + 3}s linear forwards`;
             
             const style = document.createElement('style');
             style.textContent = `
-                @keyframes heartFloat {
-                    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-                    100% { transform: translateY(-50px) rotate(180deg); opacity: 0; }
+                @keyframes fall {
+                    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+                    10% { opacity: 0.7; }
+                    90% { opacity: 0.7; }
+                    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
                 }
             `;
             document.head.appendChild(style);
@@ -95,20 +131,23 @@ function addInteractiveHearts() {
             
             setTimeout(() => {
                 heart.remove();
-            }, 1500);
-        }
-    });
+            }, 6000);
+        }, 2000);
+    }
 }
 
-// Initialize everything when page loads
-window.addEventListener('load', () => {
-    createParticles();
-    addInteractiveHearts();
-    
-    // Auto-open after 5 seconds if user doesn't click
-    setTimeout(() => {
-        if (!document.getElementById('content-scene').classList.contains('hidden')) {
-            document.getElementById('envelope').click();
-        }
-    }, 5000);
+// Initialize the vintage letter experience
+document.addEventListener('DOMContentLoaded', () => {
+    const letter = new VintageLetter();
+    letter.createFloatingHearts();
+});
+
+// Add mouse move parallax effect
+document.addEventListener('mousemove', (e) => {
+    const scenes = document.querySelectorAll('.scene.active');
+    scenes.forEach(scene => {
+        const x = (window.innerWidth / 2 - e.clientX) / 25;
+        const y = (window.innerHeight / 2 - e.clientY) / 25;
+        scene.style.transform = `perspective(1000px) rotateY(${x}deg) rotateX(${y}deg) scale(1)`;
+    });
 });
